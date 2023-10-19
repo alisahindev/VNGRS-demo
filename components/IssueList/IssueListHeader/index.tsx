@@ -5,80 +5,105 @@ import { octokit } from "@/api/client";
 import Link from "next/link";
 import SearchableDropdown from "@/components/SearchableDropdown";
 import Avatar from "@/components/Avatar";
-
-const getAuthorListItem = (author: any[], searchParams: any) => {
-  return author.map((item) => {
-    return {
-      key: item.login,
-      label: (
-        <Link
-          href={{
-            query: {
-              ...searchParams,
-              creator: item.login,
-            },
-          }}
-          className="text-issue-list-text flex items-center gap-2"
-        >
-          <Avatar src={item.avatar_url} alt={item.login} />
-          {item.login}
-        </Link>
-      ),
-      searchValue: item.login,
-    };
-  });
-};
+import Typography from "@/components/Typography";
+import { deleteEmpty } from "@/utils/deleteEmpty";
+import {
+  getAssigneeListItem,
+  getAuthorListItem,
+  getLabelListItem,
+  getMilestoneListItem,
+  getProjectListItem,
+  getSortListItem,
+} from "./helperComps";
 
 const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
-  // const { data: openState } = await octokit.request("GET /search/issues", {
-  //   q: `repo:facebook/react+type:issue+state:open`,
-  // });
-  // const { data: closedState } = await octokit.request("GET /search/issues", {
-  //   q: `repo:facebook/react+type:issue+state:closed`,
-  // });
+  const { data: openState } = await octokit.request("GET /search/issues", {
+    q: `repo:facebook/react+type:issue+state:open`,
+  });
+  const { data: closedState } = await octokit.request("GET /search/issues", {
+    q: `repo:facebook/react+type:issue+state:closed`,
+  });
 
   // get Authors
-  // const { data: authors } = await octokit.request(
-  //   "GET /repos/{owner}/{repo}/contributors",
-  //   {
-  //     owner: "facebook",
-  //     repo: "react",
-  //   }
-  // );
-
-  const author = [
+  const { data: authors } = await octokit.request(
+    "GET /repos/{owner}/{repo}/contributors",
     {
-      login: "hoxyq",
-      id: 28902667,
-      node_id: "MDQ6VXNlcjI4OTAyNjY3",
-      avatar_url: "https://avatars.githubusercontent.com/u/28902667?v=4",
-      gravatar_id: "",
-      url: "https://api.github.com/users/hoxyq",
-      html_url: "https://github.com/hoxyq",
-      followers_url: "https://api.github.com/users/hoxyq/followers",
-      following_url:
-        "https://api.github.com/users/hoxyq/following{/other_user}",
-      gists_url: "https://api.github.com/users/hoxyq/gists{/gist_id}",
-      starred_url: "https://api.github.com/users/hoxyq/starred{/owner}{/repo}",
-      subscriptions_url: "https://api.github.com/users/hoxyq/subscriptions",
-      organizations_url: "https://api.github.com/users/hoxyq/orgs",
-      repos_url: "https://api.github.com/users/hoxyq/repos",
-      events_url: "https://api.github.com/users/hoxyq/events{/privacy}",
-      received_events_url: "https://api.github.com/users/hoxyq/received_events",
-      type: "User",
-      site_admin: false,
-      contributions: 46,
+      owner: "facebook",
+      repo: "react",
+    }
+  );
+
+  // get Labels
+  const { data: labels } = await octokit.request(
+    "GET /repos/{owner}/{repo}/labels",
+    {
+      owner: "facebook",
+      repo: "react",
+    }
+  );
+
+  // get projects
+  const { data: projects } = await octokit.request(
+    "GET /repos/{owner}/{repo}/projects",
+    {
+      owner: "facebook",
+      repo: "react",
+    }
+  );
+
+  // get milestones
+  const { data: milestones } = await octokit.request(
+    "GET /repos/{owner}/{repo}/milestones",
+    {
+      owner: "facebook",
+      repo: "react",
+    }
+  );
+
+  // get assignees
+  const { data: assignees } = await octokit.request(
+    "GET /repos/{owner}/{repo}/assignees",
+    {
+      owner: "facebook",
+      repo: "react",
+    }
+  );
+
+  const sorts = [
+    {
+      label: "Newest",
+      value: "created-desc",
+    },
+    {
+      label: "Oldest",
+      value: "created-asc",
+    },
+    {
+      label: "Most commented",
+      value: "comments-desc",
+    },
+    {
+      label: "Least commented",
+      value: "comments-asc",
+    },
+    {
+      label: "Recently updated",
+      value: "updated-desc",
+    },
+    {
+      label: "Least recently updated",
+      value: "updated-asc",
+    },
+    {
+      label: "Best match",
+      value: "relevance-desc",
     },
   ];
-  console.log(author);
 
   const linkClass =
-    "flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer";
+    "flex items-center gap-2 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer";
 
   const selected = searchParams?.state ?? "open";
-
-  let openState = { total_count: 0 };
-  let closedState = { total_count: 0 };
 
   return (
     <div className="text-gh-primary p-4 border border-issue-list-border rounded-t-md -mb-[1px] bg-muted-hover">
@@ -94,13 +119,13 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
             className={`${linkClass} 
             ${
               selected === "open"
-                ? "text-issue-list-text font-bold"
+                ? "text-issue-list-text font-semibold"
                 : "font-normal"
             }
             `}
           >
             <Open />
-            {openState.total_count} Open
+            {openState.total_count.toLocaleString()} Open
           </Link>
           <Link
             href={{
@@ -112,21 +137,66 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
             className={`${linkClass} 
             ${
               selected === "closed"
-                ? "text-issue-list-text font-bold"
+                ? "text-issue-list-text font-semibold"
                 : "font-normal"
             }
             `}
           >
             <Check />
-            {closedState.total_count} Closed
+            {closedState.total_count.toLocaleString()} Closed
           </Link>
         </div>
-        <div>
+        <div className="flex items-center gap-x-8">
           <SearchableDropdown
             filterBy="author"
-            items={getAuthorListItem(author, searchParams)}
+            items={getAuthorListItem(authors, searchParams)}
           >
-            <button>Author</button>
+            <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+              Author <span className="dropdown-caret" />
+            </button>
+          </SearchableDropdown>
+          <SearchableDropdown
+            filterBy="label"
+            items={getLabelListItem(labels, searchParams)}
+          >
+            <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+              Label <span className="dropdown-caret" />
+            </button>
+          </SearchableDropdown>
+          <div className="flex items-center gap-x-8 max-md:hidden">
+            <SearchableDropdown
+              filterBy="project"
+              items={getProjectListItem(projects, searchParams)}
+            >
+              <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+                Project <span className="dropdown-caret" />
+              </button>
+            </SearchableDropdown>
+            <SearchableDropdown
+              filterBy="milestone"
+              items={getMilestoneListItem(milestones, searchParams)}
+            >
+              <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+                Milestones <span className="dropdown-caret" />
+              </button>
+            </SearchableDropdown>
+          </div>
+          <SearchableDropdown
+            filterBy="assignee"
+            items={getAssigneeListItem(assignees, searchParams)}
+          >
+            <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+              Assignee <span className="dropdown-caret" />
+            </button>
+          </SearchableDropdown>
+          <SearchableDropdown
+            filterBy="sort"
+            items={getSortListItem(sorts, searchParams)}
+            filtering={false}
+          >
+            <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
+              Sort <span className="dropdown-caret" />
+            </button>
           </SearchableDropdown>
         </div>
       </div>

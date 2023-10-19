@@ -3,7 +3,7 @@ import React from "react";
 
 const Typography: React.FC<TypographyProps> = ({
   variant,
-  textColor = "text-white",
+  textColor = "text-[#7d8590]",
   children,
   className,
   onClick,

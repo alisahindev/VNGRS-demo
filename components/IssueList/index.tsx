@@ -2,15 +2,9 @@ import IssueListItem from "./IssueListItem";
 import IssueListHeader from "./IssueListHeader";
 import { octokit } from "@/api/client";
 import { data } from "@/api/mock";
+import { deleteEmpty } from "@/utils/deleteEmpty";
 
 const IssueList = async ({ searchParams }: IssueListProps) => {
-  const deleteEmpty = (obj: any) => {
-    Object.keys(obj).forEach((key) => {
-      if (obj[key] === "") delete obj[key];
-    });
-    return obj;
-  };
-
   // const { data } = await octokit.request(
   //   "GET /repos/{owner}/{repo}/issues",
   //   deleteEmpty({

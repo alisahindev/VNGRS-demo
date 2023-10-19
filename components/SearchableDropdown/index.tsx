@@ -10,6 +10,7 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
   items,
   children,
   filterBy,
+  filtering = true,
 }) => {
   const [options, setOptions] = useState(items);
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,7 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
 
   const onSearch = (query: string) => {
     const filteredOptions = items.filter((item) =>
-      item.searchValue.toLowerCase().includes(query.toLowerCase())
+      item.searchValue?.toLowerCase().includes(query.toLowerCase())
     );
     setOptions(filteredOptions);
   };
@@ -46,45 +47,62 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
       {dropdownTrigger}
       <CSSTransition
         in={isOpen}
-        timeout={500}
+        timeout={100}
         classNames={{
-          enter: "max-h-0",
-          enterActive: "max-h-[500px] transition-all duration-300 ease-in-out",
-          exit: "max-h-[500px]",
-          exitActive: "max-h-0 transition-all duration-300 ease-in-out",
+          enter: "opacity-0",
+          enterActive: "opacity-100",
+          exit: "opacity-100",
+          exitActive: "opacity-0",
         }}
         unmountOnExit
+        nodeRef={dropdownRef}
       >
         <div
-          className="absolute top-full right-0 max-w-xs w-80  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10"
+          className="absolute top-full right-0 max-w-xs w-80 max-h-[380px]  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10 overflow-hidden overflow-y-auto"
           ref={dropdownRef}
         >
-          <header className="p-[7px] pl-4 text-xs font-semibold flex items-center justify-between text-issue-list-text leading-normal">
-            Filter by {filterBy}
-            <span
-              className="cursor-pointer text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out -m-[7px] -mr-[7px] p-[7px]"
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              <Close />
-            </span>
-          </header>
-          <div className="p-2 border-b border-b-issue-list-border">
-            <input
-              type="text"
-              className="w-full placeholder:capitalize text-issue-list-text bg-muted rounded-md text-sm px-3 py-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder={`Filter ${filterBy}s`}
-              onChange={(e) => {
-                onSearch(e.target.value);
-              }}
-            />
+          <div
+            // sticky
+            className="sticky top-0 z-10 bg-muted-hover"
+          >
+            <header className="p-[7px] pl-4 text-xs font-semibold flex items-center justify-between text-issue-list-text leading-normal">
+              {filterBy !== "sort" ? `Filter by ${filterBy}` : "Sort by"}
+              <span
+                className="cursor-pointer text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out -m-[7px] -mr-[7px] p-[7px]"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <Close />
+              </span>
+            </header>
+            {filtering && (
+              <div className="p-2 border-b border-b-issue-list-border">
+                <input
+                  type="text"
+                  className="w-full placeholder:capitalize text-issue-list-text bg-muted rounded-md text-sm px-3 py-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={`Filter ${filterBy}s`}
+                  onChange={(e) => {
+                    onSearch(e.target.value);
+                  }}
+                />
+              </div>
+            )}
           </div>
-          <ul>
+          <ul className="divide-y divide-issue-list-border">
             {options?.length > 0 ? (
-              items.map((item) => <li key={item.key}>{item.label}</li>)
+              items.map((item) => (
+                <li
+                  className="px-4 py-[7px] text-sm text-issue-list-text hover:bg-[#6e76811a] cursor-pointer transition-colors duration-200 ease-in-out"
+                  key={item.key}
+                >
+                  {item.label}
+                </li>
+              ))
             ) : (
-              <li className="border-none">No results</li>
+              <li className="border-none px-4 py-[7px] text-sm text-issue-list-text hover:bg-[#6e76811a] cursor-pointer transition-colors duration-200 ease-in-out">
+                No results
+              </li>
             )}
           </ul>
         </div>

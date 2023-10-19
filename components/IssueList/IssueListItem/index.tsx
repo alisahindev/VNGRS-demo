@@ -16,7 +16,7 @@ const IssueListItem = ({ issue }: IssueListItemProps) => {
       aria-label="Issue"
     >
       <span
-        className={`pl-2 leading-[21px] ${
+        className={`pl-2 leading-[21px] mt-1 ${
           issue.state === "open" ? "text-green-500" : "text-purple-600"
         }`}
       >
