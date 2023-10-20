@@ -28,6 +28,7 @@ interface SearchParams {
     | "hooray"
     | "rocket"
     | "eyes";
+  project?: string;
 }
 
 interface IssueListHeaderProps {

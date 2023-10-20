@@ -58,7 +58,7 @@ export const getSortListItem = (sort: any[], searchParams: SearchParams) => {
               }}
               className={`py-2 px-4 hover:bg-[#6e76811a] rounded-md transition-colors text-base duration-200 ease-in-out border border-transparent hover:border-blue-500
                   ${
-                    searchParams.reaction === reaction.value
+                    searchParams.reactions === reaction.value
                       ? "bg-[#6e76811a] ring-blue-500"
                       : ""
                   }
