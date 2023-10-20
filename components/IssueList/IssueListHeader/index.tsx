@@ -5,11 +5,11 @@ import { octokit } from "@/api/client";
 import Link from "next/link";
 import SearchableDropdown from "@/components/SearchableDropdown";
 import { getAuthorListItem } from "./components/GetAuthorListItem";
-import { getLabelListItem } from "./components/getLabelListItem";
 import { getProjectListItem } from "./components/GetProjectListItem";
 import { getMilestoneListItem } from "./components/GetMilestoneListItem";
 import { getAssigneeListItem } from "./components/GetAssigneeListItem";
 import { getSortListItem } from "./components/GetSortListItem";
+import { getLabelListItem } from "./components/GetLabelListItem";
 
 const IssueListHeader = async ({
   searchParams,

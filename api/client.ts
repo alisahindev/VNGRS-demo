@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/core";
+import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 export const octokit = new Octokit({
@@ -14,4 +15,9 @@ octokit.request.defaults({
 octokit.hook.error("request", async (error, options) => {
   console.error(`Request error: ${error.message}`);
   console.error(`Request options: ${JSON.stringify(options)}`);
+  return notFound();
+});
+
+octokit.hook.before("request", async (options) => {
+  revalidatePath("/");
 });

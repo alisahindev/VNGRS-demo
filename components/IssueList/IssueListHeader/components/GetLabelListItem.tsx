@@ -2,19 +2,18 @@ import Check from "@/components/Icons/Check";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 
-export const getLabelListItem = (labels: any[], searchParams: any) => {
+export const getLabelListItem = (labels: any[], searchParams: SearchParams) => {
   return labels.map((item) => {
-    const newParams = {
-      ...searchParams,
-      labels: searchParams.labels === item.name ? null : item.name,
-    };
-
     return {
       key: item.name,
       label: (
         <Link
           href={{
-            query: newParams,
+            query: {
+              ...searchParams,
+              labels: searchParams.labels === item.name ? null : item.name,
+            },
+            slashes: true,
           }}
           className="text-issue-list-text flex items-center gap-2"
         >

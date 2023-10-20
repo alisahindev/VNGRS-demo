@@ -3,8 +3,13 @@ import Check from "@/components/Icons/Check";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 
-export const getAuthorListItem = (author: any[], searchParams: any) => {
-  return author.map((item) => {
+export const getAuthorListItem = (
+  author: any[],
+  searchParams: SearchParams
+) => {
+  const authors = author.map((item) => {
+    const selected = searchParams.creator === item.login;
+
     return {
       key: item.login,
       label: (
@@ -12,13 +17,13 @@ export const getAuthorListItem = (author: any[], searchParams: any) => {
           href={{
             query: {
               ...searchParams,
-              creator: item.login === searchParams.creator ? null : item.login,
+              creator: selected ? null : item.login,
             },
           }}
           className="text-issue-list-text flex items-center gap-2"
         >
           <span className="w-4 h-4 flex items-center justify-center text-issue-list-text">
-            {searchParams.creator === item.login && <Check />}
+            {selected && <Check />}
           </span>
           <Avatar src={item.avatar_url} alt={item.login} />
           <Typography
@@ -32,4 +37,6 @@ export const getAuthorListItem = (author: any[], searchParams: any) => {
       searchValue: item.login,
     };
   });
+
+  return authors;
 };

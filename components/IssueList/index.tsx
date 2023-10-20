@@ -1,7 +1,5 @@
 import IssueListItem from "./IssueListItem";
 import IssueListHeader from "./IssueListHeader";
-import { octokit } from "@/api/client";
-import { deleteEmpty } from "@/utils/deleteEmpty";
 import Pagination from "../Pagination";
 import BlankState from "../BlankState";
 import Link from "next/link";
@@ -15,7 +13,9 @@ const IssueList = async ({ searchParams }: IssueListProps) => {
   const openState = await getOpenState();
   const closedState = await getClosedState();
 
-  const { data } = await getIssues(searchParams);
+  const { data } = await getIssues({
+    ...searchParams,
+  });
 
   const total_count = {
     open: openState,

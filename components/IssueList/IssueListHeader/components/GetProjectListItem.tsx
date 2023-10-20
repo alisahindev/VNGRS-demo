@@ -2,7 +2,10 @@ import Check from "@/components/Icons/Check";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 
-export const getProjectListItem = (projects: any[], searchParams: any) => {
+export const getProjectListItem = (
+  projects: any[],
+  searchParams: SearchParams
+) => {
   return projects.map((item) => {
     const newParams = {
       ...searchParams,

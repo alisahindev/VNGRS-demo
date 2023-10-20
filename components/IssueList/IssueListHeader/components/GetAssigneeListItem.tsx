@@ -3,7 +3,10 @@ import Check from "@/components/Icons/Check";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 
-export const getAssigneeListItem = (assignees: any[], searchParams: any) => {
+export const getAssigneeListItem = (
+  assignees: any[],
+  searchParams: SearchParams
+) => {
   return assignees.map((item) => {
     const newParams = {
       ...searchParams,

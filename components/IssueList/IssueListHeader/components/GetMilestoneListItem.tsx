@@ -2,7 +2,10 @@ import Check from "@/components/Icons/Check";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 
-export const getMilestoneListItem = (milestones: any[], searchParams: any) => {
+export const getMilestoneListItem = (
+  milestones: any[],
+  searchParams: SearchParams
+) => {
   return milestones.map((item) => {
     const newParams = {
       ...searchParams,

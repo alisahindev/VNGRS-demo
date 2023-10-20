@@ -64,8 +64,11 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
           exit: "opacity-100",
           exitActive: "opacity-0",
         }}
-        unmountOnExit
         nodeRef={dropdownRef}
+        unmountOnExit
+        onExit={() => {
+          setOptions(items);
+        }}
       >
         <div
           className="absolute top-full right-0 max-w-xs w-80  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10"

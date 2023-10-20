@@ -3,7 +3,7 @@ import Typography from "@/components/Typography";
 import { reactions } from "@/contants/reactions";
 import Link from "next/link";
 
-export const getSortListItem = (sort: any[], searchParams: any) => {
+export const getSortListItem = (sort: any[], searchParams: SearchParams) => {
   let listItems = sort.map((item) => {
     const newParams = {
       ...searchParams,

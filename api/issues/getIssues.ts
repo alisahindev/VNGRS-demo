@@ -26,7 +26,7 @@ export const getIssues = async (searchParams: SearchParams) => {
       };
     });
   return {
-    data: response.data,
+    data: response?.data || [],
   };
 };
 
