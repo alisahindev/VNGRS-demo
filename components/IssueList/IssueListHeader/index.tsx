@@ -4,9 +4,6 @@ import Check from "@/components/Icons/Check";
 import { octokit } from "@/api/client";
 import Link from "next/link";
 import SearchableDropdown from "@/components/SearchableDropdown";
-import Avatar from "@/components/Avatar";
-import Typography from "@/components/Typography";
-import { deleteEmpty } from "@/utils/deleteEmpty";
 import {
   getAssigneeListItem,
   getAuthorListItem,
@@ -16,14 +13,11 @@ import {
   getSortListItem,
 } from "./helperComps";
 
-const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
-  const { data: openState } = await octokit.request("GET /search/issues", {
-    q: `repo:facebook/react+type:issue+state:open`,
-  });
-  const { data: closedState } = await octokit.request("GET /search/issues", {
-    q: `repo:facebook/react+type:issue+state:closed`,
-  });
-
+const IssueListHeader = async ({
+  searchParams,
+  closedCount,
+  openCount,
+}: IssueListHeaderProps) => {
   // get Authors
   const { data: authors } = await octokit.request(
     "GET /repos/{owner}/{repo}/contributors",
@@ -108,7 +102,7 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
   return (
     <div className="text-gh-primary p-4 border border-issue-list-border rounded-t-md -mb-[1px] bg-muted-hover">
       <div className="flex flex-auto items-center justify-between whitespace-nowrap">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-[12px]">
           <Link
             href={{
               query: {
@@ -125,7 +119,7 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
             `}
           >
             <Open />
-            {openState.total_count.toLocaleString()} Open
+            {openCount.toLocaleString()} Open
           </Link>
           <Link
             href={{
@@ -143,7 +137,7 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
             `}
           >
             <Check />
-            {closedState.total_count.toLocaleString()} Closed
+            {closedCount.toLocaleString()} Closed
           </Link>
         </div>
         <div className="flex items-center gap-x-8">
@@ -169,7 +163,7 @@ const IssueListHeader = async ({ searchParams }: { searchParams: any }) => {
               items={getProjectListItem(projects, searchParams)}
             >
               <button className="flex items-center gap-1 text-sm leading-[21px] text-[#7d8590] hover:text-issue-list-text transition-colors duration-200 ease-in-out cursor-pointer">
-                Project <span className="dropdown-caret" />
+                Projects <span className="dropdown-caret" />
               </button>
             </SearchableDropdown>
             <SearchableDropdown

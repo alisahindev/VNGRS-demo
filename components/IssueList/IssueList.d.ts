@@ -18,3 +18,9 @@ interface SearchParams {
   per_page?: number;
   page?: number;
 }
+
+interface IssueListHeaderProps {
+  searchParams: SearchParams;
+  openCount: number;
+  closedCount: number;
+}

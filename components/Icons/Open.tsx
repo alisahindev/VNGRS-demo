@@ -1,11 +1,11 @@
 import React from "react";
 
-function Open() {
+function Open({ className }: { className?: string }) {
   return (
     <svg
       width="16"
       height="16"
-      className="fill-current"
+      className={`fill-current ${className}`}
       viewBox="0 0 16 16"
       color="currentColor"
     >

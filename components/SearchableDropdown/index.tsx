@@ -22,7 +22,6 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
   };
 
   const closeDropdown = () => {
-    console.log("closeDropdown");
     setIsOpen(false);
   };
 
