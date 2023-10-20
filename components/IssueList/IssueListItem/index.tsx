@@ -5,10 +5,11 @@ import Open from "@/components/Icons/Open";
 import PullRequest from "@/components/Icons/PullRequest";
 import RelativeTime from "@/components/RelativeTime";
 import Typography from "@/components/Typography";
+import { reactions } from "@/contants/reactions";
 import Link from "next/link";
 import React from "react";
 
-const IssueListItem = ({ issue }: IssueListItemProps) => {
+const IssueListItem = ({ issue, searchParams }: IssueListItemProps) => {
   return (
     <li
       role="listitem"
@@ -23,22 +24,35 @@ const IssueListItem = ({ issue }: IssueListItemProps) => {
         <Open />
       </span>
       <div className="flex flex-col px-2 w-[880px] max-w-4xl">
-        <Link
-          className="text-base text-issue-list-text sm:hover:text-issue-list-text-hover font-semibold whitespace-normal"
-          href={issue.html_url}
-        >
-          {issue.title}{" "}
-          <span>
+        <div className="flex gap-1 flex-wrap">
+          <Link
+            className="text-base text-issue-list-text sm:hover:text-issue-list-text-hover font-semibold whitespace-normal"
+            href={issue.html_url}
+          >
+            {issue.title}
+          </Link>
+          <span className="flex flex-wrap items-center gap-1">
             {issue.labels.map((label) => (
-              <Chip
+              <Link
                 key={label.id}
-                label={label.name}
-                color={label.color}
-                variant="default"
-              />
+                href={{
+                  pathname: "/",
+                  query: {
+                    labels: label.name,
+                    state: issue.state,
+                  },
+                }}
+              >
+                <Chip
+                  label={label.name}
+                  color={label.color}
+                  variant="default"
+                  className="cursor-pointer"
+                />
+              </Link>
             ))}
           </span>
-        </Link>
+        </div>
         <span className="mt-1">
           <Typography
             variant="p"

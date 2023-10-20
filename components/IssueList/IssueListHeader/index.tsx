@@ -4,14 +4,12 @@ import Check from "@/components/Icons/Check";
 import { octokit } from "@/api/client";
 import Link from "next/link";
 import SearchableDropdown from "@/components/SearchableDropdown";
-import {
-  getAssigneeListItem,
-  getAuthorListItem,
-  getLabelListItem,
-  getMilestoneListItem,
-  getProjectListItem,
-  getSortListItem,
-} from "./helperComps";
+import { getAuthorListItem } from "./components/GetAuthorListItem";
+import { getLabelListItem } from "./components/getLabelListItem";
+import { getProjectListItem } from "./components/GetProjectListItem";
+import { getMilestoneListItem } from "./components/GetMilestoneListItem";
+import { getAssigneeListItem } from "./components/GetAssigneeListItem";
+import { getSortListItem } from "./components/GetSortListItem";
 
 const IssueListHeader = async ({
   searchParams,
@@ -102,7 +100,7 @@ const IssueListHeader = async ({
   return (
     <div className="text-gh-primary p-4 border border-issue-list-border rounded-t-md -mb-[1px] bg-muted-hover">
       <div className="flex flex-auto items-center justify-between whitespace-nowrap">
-        <div className="flex items-center gap-[12px]">
+        <div className="flex items-center gap-[12px] max-sm:hidden">
           <Link
             href={{
               query: {

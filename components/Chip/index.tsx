@@ -5,7 +5,12 @@ const borderOpacity = 0.3;
 const bgOpacity = 0.18;
 const textOpacity = 0.87;
 
-const Chip: React.FC<ChipProps> = ({ color, variant = "default", label }) => {
+const Chip: React.FC<ChipProps> = ({
+  color,
+  variant = "default",
+  label,
+  className,
+}) => {
   const getStyles = () => {
     switch (variant) {
       case "default":
@@ -31,7 +36,7 @@ const Chip: React.FC<ChipProps> = ({ color, variant = "default", label }) => {
   return (
     <div
       style={getStyles()}
-      className={`px-[7px] inline-flex text-xs leading-normal font-semibold rounded-3xl whitespace-nowrap border`}
+      className={`px-[7px] inline-flex text-xs leading-normal font-semibold rounded-3xl whitespace-nowrap border ${className}`}
     >
       {label}
     </div>

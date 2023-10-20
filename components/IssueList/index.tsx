@@ -5,39 +5,25 @@ import { deleteEmpty } from "@/utils/deleteEmpty";
 import Pagination from "../Pagination";
 import BlankState from "../BlankState";
 import Link from "next/link";
-
-export const dynamic = "force-dynamic";
+import {
+  getClosedState,
+  getIssues,
+  getOpenState,
+} from "@/api/issues/getIssues";
 
 const IssueList = async ({ searchParams }: IssueListProps) => {
-  const { data } = await octokit.request(
-    "GET /repos/{owner}/{repo}/issues",
-    deleteEmpty({
-      owner: "facebook",
-      repo: "react",
-      page: Number(searchParams.page) || 1,
-      per_page: Number(searchParams.per_page) || 25,
-      sort: searchParams.sort || "created",
-      state: searchParams.state || "open",
-      assignee: searchParams.assignee || "",
-      creator: searchParams.creator || "",
-      mentioned: searchParams.mentioned || "",
-      labels: searchParams.labels || "",
-      direction: searchParams.direction || "desc",
-    })
-  );
+  const openState = await getOpenState();
+  const closedState = await getClosedState();
 
-  const { data: openState } = await octokit.request("GET /search/issues", {
-    q: `repo:facebook/react+type:issue+state:open`,
-  });
+  const { data } = await getIssues(searchParams);
 
-  const { data: closedState } = await octokit.request("GET /search/issues", {
-    q: `repo:facebook/react+type:issue+state:closed`,
-  });
+  const total_count = {
+    open: openState,
+    closed: closedState,
+  };
 
   const total =
-    searchParams.state === "closed"
-      ? closedState.total_count
-      : openState.total_count;
+    searchParams.state === "closed" ? total_count.closed : total_count.open;
 
   const perPage = searchParams.per_page || 25;
 
@@ -59,8 +45,8 @@ const IssueList = async ({ searchParams }: IssueListProps) => {
       </Link>
       <IssueListHeader
         searchParams={searchParams}
-        openCount={openState.total_count}
-        closedCount={closedState.total_count}
+        openCount={total_count.open}
+        closedCount={total_count.closed}
       />
       <ul
         role="list"
@@ -68,7 +54,11 @@ const IssueList = async ({ searchParams }: IssueListProps) => {
         className="divide-y divide-issue-list-border sm:border border-issue-list-border w-full h-full rounded-b-md"
       >
         {data.map((issue) => (
-          <IssueListItem issue={issue as Issue} key={issue.id} />
+          <IssueListItem
+            issue={issue as Issue}
+            key={issue.id}
+            searchParams={searchParams}
+          />
         ))}
         {data.length === 0 && <BlankState />}
       </ul>

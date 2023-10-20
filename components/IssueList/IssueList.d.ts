@@ -4,6 +4,7 @@ interface IssueListProps {
 
 interface IssueListItemProps {
   issue: Issue;
+  searchParams: SearchParams;
 }
 
 interface SearchParams {
@@ -17,6 +18,16 @@ interface SearchParams {
   direction?: "asc" | "desc";
   per_page?: number;
   page?: number;
+  reactions?:
+    | "none"
+    | "+1"
+    | "-1"
+    | "laugh"
+    | "thinking_face"
+    | "heart"
+    | "hooray"
+    | "rocket"
+    | "eyes";
 }
 
 interface IssueListHeaderProps {

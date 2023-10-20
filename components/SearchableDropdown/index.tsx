@@ -2,9 +2,10 @@
 
 import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { cloneElement } from "@/utils/reactNode";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Close from "../Icons/Close";
 import { CSSTransition } from "react-transition-group";
+import debounce from "lodash.debounce";
 
 const SearchableDropdown: React.FC<ISearchableDropdown> = ({
   items,
@@ -25,12 +26,22 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
     setIsOpen(false);
   };
 
-  const onSearch = (query: string) => {
-    const filteredOptions = items.filter((item) =>
-      item.searchValue?.toLowerCase().includes(query.toLowerCase())
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const filteredItems = items.filter((item) =>
+      item.searchValue!.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    setOptions(filteredOptions);
+    setOptions(filteredItems);
   };
+
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 300);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
 
   useOutsideClick(dropdownRef, closeDropdown);
 
@@ -81,16 +92,14 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
                   type="text"
                   className="w-full placeholder:capitalize text-issue-list-text bg-muted rounded-md text-sm px-3 py-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder={`Filter ${filterBy}s`}
-                  onChange={(e) => {
-                    onSearch(e.target.value);
-                  }}
+                  onChange={debouncedResults}
                 />
               </div>
             )}
           </div>
           <ul className="divide-y divide-issue-list-border max-h-[380px]  overflow-hidden overflow-y-auto">
             {options?.length > 0 ? (
-              items.map((item) => (
+              options.map((item) => (
                 <li
                   className="px-4 py-[7px] text-sm text-issue-list-text hover:bg-[#6e76811a] cursor-pointer transition-colors duration-200 ease-in-out"
                   key={item.key}
