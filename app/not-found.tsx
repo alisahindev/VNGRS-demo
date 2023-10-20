@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import Typography from "@/components/Typography";
 
 export default async function NotFound() {
@@ -12,6 +11,15 @@ export default async function NotFound() {
           anasayfaya dönün
         </Link>
       </Typography>
+      <ul
+        role="list"
+        aria-label="Check your token"
+        className="divide-y divide-issue-list-border sm:border border-issue-list-border rounded-b-md"
+      >
+        <li className="py-4 px-6 text-sm text-gray-500 list-none ">
+          Lütfen token bilgilerinizi kontrol edin.{" "}
+        </li>
+      </ul>
     </div>
   );
 }

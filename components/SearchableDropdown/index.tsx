@@ -57,7 +57,7 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
         nodeRef={dropdownRef}
       >
         <div
-          className="absolute top-full right-0 max-w-xs w-80 max-h-[380px]  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10 overflow-hidden overflow-y-auto"
+          className="absolute top-full right-0 max-w-xs w-80  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10"
           ref={dropdownRef}
         >
           <div
@@ -88,7 +88,7 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
               </div>
             )}
           </div>
-          <ul className="divide-y divide-issue-list-border">
+          <ul className="divide-y divide-issue-list-border max-h-[380px]  overflow-hidden overflow-y-auto">
             {options?.length > 0 ? (
               items.map((item) => (
                 <li
