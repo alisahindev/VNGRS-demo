@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export const getLabelListItem = (labels: any[], searchParams: SearchParams) => {
   return labels.map((item) => {
+    const selected = searchParams.labels === item.name;
     return {
       key: item.name,
       label: (
@@ -11,14 +12,14 @@ export const getLabelListItem = (labels: any[], searchParams: SearchParams) => {
           href={{
             query: {
               ...searchParams,
-              labels: searchParams.labels === item.name ? null : item.name,
+              labels: selected ? null : item.name,
             },
             slashes: true,
           }}
           className="text-issue-list-text flex items-center gap-2"
         >
           <span className="w-4 h-4 flex items-center justify-center text-issue-list-text">
-            {searchParams.labels === item.name && <Check />}
+            {selected && <Check />}
           </span>
           <span
             className="w-4 h-4 rounded-full"

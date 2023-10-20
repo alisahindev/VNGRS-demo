@@ -74,10 +74,7 @@ const SearchableDropdown: React.FC<ISearchableDropdown> = ({
           className="absolute top-full right-0 max-w-xs w-80  bg-muted-hover border border-issue-list-border rounded-md shadow-md z-10"
           ref={dropdownRef}
         >
-          <div
-            // sticky
-            className="sticky top-0 z-10 bg-muted-hover"
-          >
+          <div className="sticky top-0 z-10 bg-muted-hover">
             <header className="p-[7px] pl-4 text-xs font-semibold flex items-center justify-between text-issue-list-text leading-normal">
               {filterBy !== "sort" ? `Filter by ${filterBy}` : "Sort by"}
               <span

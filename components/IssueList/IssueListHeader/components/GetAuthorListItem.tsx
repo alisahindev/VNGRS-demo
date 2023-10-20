@@ -22,7 +22,9 @@ export const getAuthorListItem = (
           }}
           className="text-issue-list-text flex items-center gap-2"
         >
-          <span className="w-4 h-4 flex items-center justify-center text-issue-list-text">
+          <span
+            className={` "w-4 h-4 flex items-center justify-center text-issue-list-text `}
+          >
             {selected && <Check />}
           </span>
           <Avatar src={item.avatar_url} alt={item.login} />
